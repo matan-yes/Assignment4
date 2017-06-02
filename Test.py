@@ -21,3 +21,6 @@ class Test:
 
     def get_alon(self):
         print("alon")
+
+    def get_alonn(self):
+        print("alon")
