@@ -18,4 +18,3 @@ class Test:
 
     def classify_test(self):
         raise NotImplementedError
-    # comment
