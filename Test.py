@@ -24,3 +24,6 @@ class Test:
 
     def get_alonn(self):
         print("alon")
+
+    def get_matan(self):
+        print("matan")
