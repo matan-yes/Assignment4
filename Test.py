@@ -18,3 +18,9 @@ class Test:
 
     def classify_test(self):
         raise NotImplementedError
+
+    def get_alon(self):
+        print("alon")
+
+    def get_alonn(self):
+        print("alon")
