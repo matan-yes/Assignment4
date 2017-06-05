@@ -88,7 +88,10 @@ class MainWindow:
             s.prepere_structure()
             #print myStructure
             #print s.prepere_structure()
-            #print s.get_structure()
+            if(s.check_bin_max() <= int(self.discretization_textbox.get())):
+                tkMessageBox.showinfo("Alert", "Invalid discretization bins value")
+                return
+            print s.get_structure()
             t = Train.Train(self.train_path)
             #print t.get_train()
             t.clean_train()
