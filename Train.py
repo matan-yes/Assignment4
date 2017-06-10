@@ -14,6 +14,9 @@ class Train:
         # Discretization
         raise NotImplementedError
 
+    def check_bin_max(self):
+        return  len(self.train.index)-1
+
 
 
 
