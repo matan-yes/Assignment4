@@ -1,10 +1,6 @@
 import tkMessageBox,os , tkFileDialog, Structure, Train , Test , Classifier
 from Tkinter import Tk, Label, Button, Entry, IntVar, END, W, E ,StringVar
 
-
-
-
-
 class MainWindow:
     # c'tor
 
@@ -56,16 +52,16 @@ class MainWindow:
             tkMessageBox.showinfo("Path not exists" ,"Path not exists: "+value )
 
     def getDirPath(self):
-        folderPath = tkFileDialog.askdirectory()
+        self.folderPath = tkFileDialog.askdirectory()
         #tkMessageBox.showinfo("",folderPath)
-        self.browse_value.set = folderPath
+        self.browse_value.set = self.folderPath
         self.browse_textbox.config(state='normal')
         self.browse_textbox.delete(0,'end')
-        self.browse_textbox.insert(0,folderPath)
+        self.browse_textbox.insert(0,self.folderPath)
         self.browse_textbox.config(state='readonly')
-        self.structure_path = folderPath+"/Structure.txt"
-        self.train_path = folderPath+"/train.csv"
-        self.test_path = folderPath + "/test.csv"
+        self.structure_path = self.folderPath+"/Structure.txt"
+        self.train_path = self.folderPath +"/train.csv"
+        self.test_path = self.folderPath + "/test.csv"
         if (not os.path.exists(self.structure_path)):
             tkMessageBox.showinfo("Alert","Structure file does not exists in the given path\nPlease select another folder of insert structure file into selected folder and pick again\nMissing 'Structure.text in: "+self.structure_path)
 
@@ -80,36 +76,35 @@ class MainWindow:
             tkMessageBox.showinfo("Alert","All files are in the right place!")
 
     def build(self):
+        self.bins_amount = int(self.discretization_textbox.get())
+        print("number of bins: " + str(self.bins_amount))
+        print("starting building model")
         #check bins value
-        if(self.validBinValue(self.discretization_textbox.get())):
-            #get Structure.txet data
-            s = Structure.Structure(self.structure_path)
-            #myStructure = s.get_structure()
-            s.prepere_structure()
-            #print myStructure
-            #print s.prepere_structure()
+        if(self.validBinValue(self.bins_amount)):
+            #get Structure.text data
+            self.structure = Structure.Structure(self.structure_path)
+            self.structure.prepere_structure()
 
-            #print s.get_structure()
-            t = Train.Train(self.train_path)
-            #if (s.check_bin_max() <= int(self.discretization_textbox.get())):
-            #print(t.check_bin_max())
-            if (t.check_bin_max() <= int(self.discretization_textbox.get())):
+            self.train = Train.Train(self.train_path, self.structure.get_structure(), self.bins_amount)
+
+            if (self.train.check_bin_max() <= int(self.discretization_textbox.get())):
                 tkMessageBox.showinfo("Alert", "Invalid discretization bins value")
                 return
-            #print t.get_train()
-            t.clean_train()
-            self.classfier = Classifier.Classifier.buil_model(t)
+
+            self.train.clean_train()
+
+            self.classifier = Classifier.Classifier(self.train, self.structure, self.bins_amount, self.folderPath)
+            self.classifier.build_model()
+
             tkMessageBox.showinfo("Naive Bayes Classifier", "Building classifier using train-set is done!")
 
     def classfy(self):
-            #create new test
-            test = Test.Test(self.test_path)
-            test.clean_test()
-            test.classify_test()
-
-
-
-
+        #create new test
+        print("starting classifying model")
+        test = Test.Test(self.test_path,self.structure.get_structure(),self.classifier,self.bins_amount)
+        test.clean_test()
+        test.classify_test()
+        tkMessageBox.showinfo("Done","Classification is Done!\n results in output file")
 
     def validBinValue(self,bins):
         try:

@@ -7,7 +7,6 @@ from sphinx.addnodes import index
 
 class Structure:
     def __init__(self,path):
-        #self.structure = genfromtxt(path, delimiter=' ')
         self.structure = pd.read_csv(path, sep=' ', names=["attr", "attribute_name", "attribute_value"])
 
     def get_structure(self):
@@ -36,11 +35,3 @@ class Structure:
                         optional_values_count[index] = len(splited_line)
         self.structure["attribute_value"] = optional_values
         self.structure["attribute_value_count"] = optional_values_count
-
-
-
-
-
-
-
-
